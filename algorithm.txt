@@ -1,0 +1,102 @@
+/*********************************************************
+* INPUTS
+*********************************************************/
+
+csc_weights:
+    The CSC sends one set per stripe operation. MAC array weights are constant within stripe operations
+    but input data slides. There should be 16 weights for the 16 cells in the MAC array.
+    For int16 application, the size of this input is 2048 bytes (see NOTE section below) 
+
+csc_data:
+    The CSC sends multiple sets of data per stripe operation. The data is shared by all cells in the MAC 
+    array. Size must be a multiple of one set of weights for MAC cell.
+    Note that csc_data size determines the number of atomic operations.
+        - size(data_cell_int16) = 64 * 2 = 128 bytes                        # fixed 1x1x64
+        - num_ops_per_stripe = num_bytes(csc_data) / 128 bytes
+
+csc_pipeline_status
+    Pipeline status propagarated from CSC to CACC
+
+D_OP_ENABLE:
+    Enable operation
+
+D_MISC_CFG:
+    Configuration parameters. 
+    
+    - Contains information about data types. Options are int16 (2 bytes), fp16 (2 bytes), and int8 (1 byte).
+
+/*********************************************************
+* OUTPUTS
+*********************************************************/
+
+partial_sums_to_cacc
+    A partial sum is the reuslt of an atomic operation in each MAC cell. Each cycle, 16 partial sums are sent
+    to CACC.
+
+pipeline_status_to_cacc
+    Pipeline status propagarated from CSC to CACC
+
+/*********************************************************
+* NOTE
+*********************************************************/
+
+NVDLA splits CMAC into two identical parts CMAC_A and CMAC_B. This is reflected in Verilog implementation, but
+here are a few considerations:
+
+For each stripe operation, the CSC must sent weight data for the 16 MAC cells in the mac_array. For int16, this will
+mean 2048 bytes (16 mac_cells * 64 int16_elements / mac_cell * 2 bytes / int16_elements). In the Verilog code, 
+the CMAC core only shows 1024 bytes being sent to the MAC array. This is because of the computation is split equally
+between CMAC_A and CMAC_B. 1024 bytes =  8 mac_cells * 64 int16_elements / mac_cell * 2 bytes / int16_elements
+
+Data size is same for CMAC_A and CMAC_B.
+
+/*********************************************************
+* PSEUDO CODE
+*********************************************************/
+
+partial_sums_to_cacc[16 || 32]    # array of 16 or 32 partial_sum (for int16/fp16 or int8 respectively)
+mac_array[16]                     # array containing 16 mac_cells
+
+num_ops_per_stripe = func(csc_data, data_type)
+
+if D_OP_ENABLE:
+    # perform one stripe operation
+
+    # get csc_weights and csc_data from CSC
+    csc_weights = csc.getWeights()
+    csc_data = csc.getData()
+
+    mac_array.load_weights(csc_weights)
+    data_blocks = split(csc_data, data_type)
+
+    for data in data_blocks:
+        # data is 1x1X64 element block
+        for mac_cell in mac_array:
+            partial_sum = dot_prod(mac_cell.weight, data)
+            partial_sums_to_cacc.append(partial_sum)
+        
+        send_to_cacc(partial_sums_to_cacc)
+
+/*********************************************************
+* ILA LANGUAGE
+*********************************************************/
+
+
+For each MAC Cell (x16):
+    - weight (1x1X64 = 128 bytes vector = 1024 bit vector)
+    - partial sum (2 byte = 16 bit vector)
+
+For CMAC cell
+    - data_stripe (some multiple of 1024 bit vector)
+    - data_block (1024 bit vector - same as MAC cell weight)
+
+
+Types of instructions:
+    - register updates
+    - computation stage
+
+T
+
+
+
+
