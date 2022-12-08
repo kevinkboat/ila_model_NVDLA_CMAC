@@ -10,11 +10,11 @@
 namespace ilang {
 
 // CMAC
-Ila GetCMACIla(const std::string& model_name = "cmac")
-void DefineCMACInput(Ila& m)
-void DefineCMACOutput(Ila& m)
-void DefineCMACState(Ila& m)
-void DefineCMACInstrs(Ila& m)
+Ila GetCMACIla(const std::string& model_name = "cmac");
+void DefineCMACInput(Ila& m);
+void DefineCMACOutput(Ila& m);
+void DefineCMACState(Ila& m);
+void DefineCMACInstrs(Ila& m);
 
 } // namespace ilang
 
