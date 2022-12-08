@@ -4,7 +4,7 @@
 
 namespace ilang {
 
-    Ila GetCMACIla(const std:string& model_name){
+    Ila GetCMACIla(const std::string& model_name){
         auto m = Ila(model_name);
         SetUnsignedComparison(true);
         DefineCMACInput(m);

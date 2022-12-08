@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named nvdlaila
-
-# Build rule for target.
-nvdlaila: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 nvdlaila
-.PHONY : nvdlaila
-
-# fast build rule for target.
-nvdlaila/fast:
-	$(MAKE) -f CMakeFiles/nvdlaila.dir/build.make CMakeFiles/nvdlaila.dir/build
-.PHONY : nvdlaila/fast
-
-#=============================================================================
 # Target rules for targets named nvdla
 
 # Build rule for target.
@@ -135,6 +122,19 @@ nvdla: cmake_check_build_system
 nvdla/fast:
 	$(MAKE) -f CMakeFiles/nvdla.dir/build.make CMakeFiles/nvdla.dir/build
 .PHONY : nvdla/fast
+
+#=============================================================================
+# Target rules for targets named nvdlaila
+
+# Build rule for target.
+nvdlaila: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 nvdlaila
+.PHONY : nvdlaila
+
+# fast build rule for target.
+nvdlaila/fast:
+	$(MAKE) -f CMakeFiles/nvdlaila.dir/build.make CMakeFiles/nvdlaila.dir/build
+.PHONY : nvdlaila/fast
 
 app/main.o: app/main.cc.o
 
@@ -306,8 +306,8 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... nvdlaila"
 	@echo "... nvdla"
+	@echo "... nvdlaila"
 	@echo "... app/main.o"
 	@echo "... app/main.i"
 	@echo "... app/main.s"
