@@ -2,8 +2,34 @@
 
 #include <ilang/ilang++.h>
 #include <cmac_config.h>
+#include <cmath>
 
 namespace ilang {
+
+    //////////////////////////////////////////////////////////////////////////////
+    ///  HELPER FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////////
+    
+    // Returns true if bit in specified index is 1, false if 0. Idea is to encode boolean 
+    // variables in the width of bitvectors.
+    bool _SelectBit(const ExprRef& bv, const int& idx){
+        auto b = Ite(SelectBit(bv, idx) == BvConst(1,1), BvConst(1,1), BvConst(1,2));
+        return b.bit_width() == 1;
+    }
+
+    // get int representation of the bitvector
+    int _BvToInt(const ExprRef& bv){
+        auto len = bv.bit_width();      // should be limited to the max size of an int
+        int num = 0;
+        for (int i = 0; i < len; i++){
+            // Binary to Decimal conversion
+            if (_SelectBit(bv, i)){
+                num += static_cast<int>(std::pow(2, i));
+            }
+        }
+        return num;
+    }
+
 
     void DefineCMACInstrs(Ila& m) {
 
@@ -140,7 +166,7 @@ namespace ilang {
             auto data_lo = BvConst(NVDLA_CMAC_WT_BLOCK_SIZE_INT16, 20) * (step_num - 2);
             auto data_hi = data_lo + BvConst(NVDLA_CMAC_WT_BLOCK_SIZE_INT16, 20) - 1;
             
-            auto data_unit = Extract(m.state("csc_data_int16"), NVDLA_CMAC_WT_BLOCK_SIZE_INT16, 0);
+            auto data_unit = Extract(m.state("csc_data_int16"), _BvToInt(data_hi), _BvToInt(data_lo));
 
             for (auto i = 0; i < 16; i++) {
                 // get weight for each MAC cell
