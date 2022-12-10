@@ -27,8 +27,6 @@ ilang/ilang++.h
 -
 cmac_config.h
 -
-cmath
--
 
 /root/ILAng/build/ila_model_NVDLA_CMAC/src/cmac_output.cc
 ilang/ilang++.h

@@ -1,5 +1,4 @@
 
-#include <cmath>
 
 // Returns true if bit in specified index is 1, false if 0
 bool _SelectBit(const ExprRef& bv, const int& idx){
