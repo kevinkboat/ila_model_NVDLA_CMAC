@@ -23,16 +23,19 @@ int main(int argc, char* argv[]) {
   // get the ILA model
   auto cmac = GetCMACIla("cmac");
 
+  cout << "p9";
   ILA_INFO << "#instr: " << cmac.instr_num();
   for (auto i = 0; i < cmac.instr_num(); i++) {
     ILA_INFO << cmac.instr(i);
   }
 
+  cout << "p8";
   ILA_INFO << "#state: " << cmac.state_num();
   for (auto i = 0; i < cmac.state_num(); i++) {
     ILA_INFO << cmac.state(i);
   }
 
+  cout << "p7";
   ILA_INFO << "#input: " << cmac.input_num();
   for (auto i = 0; i < cmac.input_num(); i++) {
     ILA_INFO << cmac.input(i);
@@ -42,12 +45,10 @@ int main(int argc, char* argv[]) {
     "NV_NVDLA_cmac_top.v"
   };
 
-  auto vtg_cfg = SetConfiguration();
-
-  verify_cmac(cmac, vtg_cfg, cmac_design_files);
-
+  ExportSysCSim(cmac, "./sim_model", false);
   
-
+  // auto vtg_cfg = SetConfiguration();
+  // verify_cmac(cmac, vtg_cfg, cmac_design_files);
   return 0;
 }
 

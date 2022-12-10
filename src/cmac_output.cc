@@ -2,6 +2,8 @@
 
 #include <ilang/ilang++.h>
 #include <cmac_config.h>
+#include <iostream>
+
 
 namespace ilang {
 
@@ -15,9 +17,9 @@ namespace ilang {
         m.NewBvState("cmac_a_csb_rdy", 1);
         m.NewBvState("cmac_a_csb_data_vld", 1);
 
-        // CMAC_B
-        m.NewBvState("cmac_b_csb_rdy", 1);
-        m.NewBvState("cmac_b_csb_data_vld", 1);
+        // // CMAC_B
+        // m.NewBvState("cmac_b_csb_rdy", 1);
+        // m.NewBvState("cmac_b_csb_data_vld", 1);
 
         //////////////////////////////////////////////////////////////////////////////
         ///  TO CACC 
@@ -28,8 +30,9 @@ namespace ilang {
             m.NewBvState("partial_sum_" + (std::to_string(i)), 16);
         }
 
-        m.NewBvState("status", NVDLA_CMAC_PIPELINE_STATUS_WIDTH);
+        m.NewBvState("status_to_cacc", NVDLA_CMAC_PIPELINE_STATUS_WIDTH);
 
+        m.NewBvState("wait_for_ack", 1);
     }
 
 } // namespace ilang 

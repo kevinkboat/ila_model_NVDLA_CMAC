@@ -1,0 +1,84 @@
+#include <cmac.h>
+bool cmac::decode_cmac_cmac_load_weights() {
+sc_biguint<2> local_var_1 = 2;
+bool local_var_2 = (cmac_cmac_a_state == local_var_1);
+sc_biguint<6> local_var_4 = 1;
+bool local_var_5 = (cmac_step_num == local_var_4);
+bool local_var_6 = (local_var_2 & local_var_5);
+auto& univ_var_8 = local_var_6;
+return univ_var_8;
+}
+void cmac::update_cmac_cmac_load_weights() {
+auto local_var_1 = cmac_csc_weights_int16.range(1023, 0);
+auto local_var_1_nxt_holder = local_var_1;
+auto local_var_2 = cmac_csc_weights_int16.range(2047, 1024);
+auto local_var_2_nxt_holder = local_var_2;
+auto local_var_3 = cmac_csc_weights_int16.range(11263, 10240);
+auto local_var_3_nxt_holder = local_var_3;
+auto local_var_4 = cmac_csc_weights_int16.range(12287, 11264);
+auto local_var_4_nxt_holder = local_var_4;
+auto local_var_5 = cmac_csc_weights_int16.range(13311, 12288);
+auto local_var_5_nxt_holder = local_var_5;
+auto local_var_6 = cmac_csc_weights_int16.range(14335, 13312);
+auto local_var_6_nxt_holder = local_var_6;
+auto local_var_7 = cmac_csc_weights_int16.range(15359, 14336);
+auto local_var_7_nxt_holder = local_var_7;
+auto local_var_8 = cmac_csc_weights_int16.range(16383, 15360);
+auto local_var_8_nxt_holder = local_var_8;
+auto local_var_9 = cmac_csc_weights_int16.range(3071, 2048);
+auto local_var_9_nxt_holder = local_var_9;
+auto local_var_10 = cmac_csc_weights_int16.range(4095, 3072);
+auto local_var_10_nxt_holder = local_var_10;
+auto local_var_11 = cmac_csc_weights_int16.range(5119, 4096);
+auto local_var_11_nxt_holder = local_var_11;
+auto local_var_12 = cmac_csc_weights_int16.range(6143, 5120);
+auto local_var_12_nxt_holder = local_var_12;
+auto local_var_13 = cmac_csc_weights_int16.range(7167, 6144);
+auto local_var_13_nxt_holder = local_var_13;
+auto local_var_14 = cmac_csc_weights_int16.range(8191, 7168);
+auto local_var_14_nxt_holder = local_var_14;
+auto local_var_15 = cmac_csc_weights_int16.range(9215, 8192);
+auto local_var_15_nxt_holder = local_var_15;
+auto local_var_16 = cmac_csc_weights_int16.range(10239, 9216);
+auto local_var_16_nxt_holder = local_var_16;
+sc_biguint<6> local_var_17 = 2;
+auto local_var_17_nxt_holder = local_var_17;
+cmac_cmac_weight_0 = local_var_1_nxt_holder;
+cmac_cmac_weight_1 = local_var_2_nxt_holder;
+cmac_cmac_weight_10 = local_var_3_nxt_holder;
+cmac_cmac_weight_11 = local_var_4_nxt_holder;
+cmac_cmac_weight_12 = local_var_5_nxt_holder;
+cmac_cmac_weight_13 = local_var_6_nxt_holder;
+cmac_cmac_weight_14 = local_var_7_nxt_holder;
+cmac_cmac_weight_15 = local_var_8_nxt_holder;
+cmac_cmac_weight_2 = local_var_9_nxt_holder;
+cmac_cmac_weight_3 = local_var_10_nxt_holder;
+cmac_cmac_weight_4 = local_var_11_nxt_holder;
+cmac_cmac_weight_5 = local_var_12_nxt_holder;
+cmac_cmac_weight_6 = local_var_13_nxt_holder;
+cmac_cmac_weight_7 = local_var_14_nxt_holder;
+cmac_cmac_weight_8 = local_var_15_nxt_holder;
+cmac_cmac_weight_9 = local_var_16_nxt_holder;
+cmac_step_num = local_var_17_nxt_holder;
+#ifdef ILATOR_VERBOSE
+instr_update_log << "No." << std::dec << GetInstrCntr() << '\t' << "cmac_load_weights state updates:" << std::endl;
+instr_update_log << "    cmac_cmac_weight_0 => " << std::hex << "0x" << cmac_cmac_weight_0 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_1 => " << std::hex << "0x" << cmac_cmac_weight_1 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_10 => " << std::hex << "0x" << cmac_cmac_weight_10 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_11 => " << std::hex << "0x" << cmac_cmac_weight_11 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_12 => " << std::hex << "0x" << cmac_cmac_weight_12 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_13 => " << std::hex << "0x" << cmac_cmac_weight_13 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_14 => " << std::hex << "0x" << cmac_cmac_weight_14 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_15 => " << std::hex << "0x" << cmac_cmac_weight_15 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_2 => " << std::hex << "0x" << cmac_cmac_weight_2 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_3 => " << std::hex << "0x" << cmac_cmac_weight_3 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_4 => " << std::hex << "0x" << cmac_cmac_weight_4 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_5 => " << std::hex << "0x" << cmac_cmac_weight_5 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_6 => " << std::hex << "0x" << cmac_cmac_weight_6 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_7 => " << std::hex << "0x" << cmac_cmac_weight_7 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_8 => " << std::hex << "0x" << cmac_cmac_weight_8 << std::endl; 
+instr_update_log << "    cmac_cmac_weight_9 => " << std::hex << "0x" << cmac_cmac_weight_9 << std::endl; 
+instr_update_log << "    cmac_step_num => " << std::hex << "0x" << cmac_step_num << std::endl; 
+instr_update_log << std::endl;
+#endif
+}

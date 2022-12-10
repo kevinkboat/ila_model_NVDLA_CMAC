@@ -10,7 +10,6 @@ inline std::string GetVarName(const std::string& var_name0, const std::string& v
   return var_name0 + var_name1;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////
 ///  CONFIG REGISTERS
 //////////////////////////////////////////////////////////////////////////////
@@ -73,10 +72,7 @@ inline std::string GetVarName(const std::string& var_name0, const std::string& v
 
 #define NVDLA_CMAC_WT_BLOCK_SIZE_INT16  1024    // 64 * 16 bits = 1024 bits
 #define NVDLA_CMAC_WT_BLOCK_SIZE_INT8   512     // 64 * 8 bits = 512 bits
-
-
-#define NVDLA_CMAC_PIPELINE_STATUS_WIDTH  8     // Update
-
+#define NVDLA_CMAC_PIPELINE_STATUS_WIDTH  8     // Assumed value
 
 } // namespace ilang
 
