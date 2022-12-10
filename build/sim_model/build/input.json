@@ -1,0 +1,16 @@
+{
+    "program fragment": [
+      {
+        "instr No.": 0,
+        "cmac_cmac_a_csb_addr": 0,
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 0,    
+        "cmac_cmac_a_csb_vld": 0,
+        "cmac_csc_weights_int16": 0,
+        "cmac_csc_data_int16": 0,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 0
+      }
+    ]
+}
