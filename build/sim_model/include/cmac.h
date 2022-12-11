@@ -31,6 +31,9 @@ SC_MODULE(cmac) {
   sc_biguint<32> cmac_cmac_a_csb_data;
   sc_in<sc_biguint<22>> cmac_cmac_a_csb_addr_in;
   sc_biguint<22> cmac_cmac_a_csb_addr;
+  sc_biguint<6> cmac_step_num;
+  bool cmac_cmac_partial_sum_rdy;
+  bool cmac_done_with_computation;
   sc_biguint<1024> cmac_cmac_weight_15;
   sc_biguint<1024> cmac_cmac_weight_14;
   sc_biguint<1024> cmac_cmac_weight_13;
@@ -40,11 +43,8 @@ SC_MODULE(cmac) {
   sc_biguint<1024> cmac_cmac_weight_9;
   sc_biguint<1024> cmac_cmac_weight_8;
   sc_biguint<1024> cmac_cmac_weight_7;
-  sc_biguint<6> cmac_step_num;
   sc_biguint<1024> cmac_cmac_weight_6;
-  bool cmac_cmac_partial_sum_rdy;
   sc_biguint<1024> cmac_cmac_weight_5;
-  bool cmac_done_with_computation;
   sc_biguint<1024> cmac_cmac_weight_4;
   sc_biguint<1024> cmac_cmac_weight_3;
   sc_biguint<1024> cmac_cmac_weight_2;
@@ -79,7 +79,6 @@ SC_MODULE(cmac) {
   sc_biguint<32> cmac_group0_cmac_a_d_misc_cfg;
   sc_biguint<1> cmac_group1_cmac_a_d_op_en;
   sc_biguint<32> cmac_group1_cmac_a_d_misc_cfg;
-  sc_biguint<24> univ_var_1;
   void compute();
   bool decode_cmac_Done2Idle_0();
   bool decode_cmac_Pend2Done();

@@ -16,15 +16,21 @@ namespace ilang {
         // m.AddInit(m.state(NVDLA_CMAC_A_S_STATUS_1) == BvConst(0, 2));
         // m.AddInit(m.state(NVDLA_CMAC_B_S_STATUS_0) == BvConst(0, 2));
         // m.AddInit(m.state(NVDLA_CMAC_B_S_STATUS_1) == BvConst(0, 2));
-        // m.AddInit(m.state("cmac_a_csb_rdy") == BvConst(0,1));
-        // m.AddInit(m.input("cmac_a_csb_vld") == BvConst(0,1));        
+        m.AddInit(m.state("cmac_a_csb_rdy") == BvConst(1,1));
+        m.AddInit(m.state("partial_sum_0") == BvConst(12,16));      
+        m.AddInit(m.state("partial_sum_2") == Extract(m.input("cmac_a_csb_addr"), 15, 0));      
+
+        m.AddInit(m.state("cmac_a_state") == IDLE);
+        m.AddInit(m.state(NVDLA_CMAC_A_S_PRODUCER) == BvConst(0, NVDLA_CMAC_A_S_PRODUCER_WIDTH));
+        m.AddInit(m.state(NVDLA_CMAC_A_S_CONSUMER) == BvConst(0, NVDLA_CMAC_A_S_CONSUMER_WIDTH));
+        m.AddInit(m.state(GetVarName("group0_", NVDLA_CMAC_A_D_OP_ENABLE)) == BvConst(0, NVDLA_CMAC_A_D_OP_ENABLE_WIDTH));
 
         //////////////////////////////////////////////////////////////////////////////
         ///  CSB TRIGGERED OPS
         //////////////////////////////////////////////////////////////////////////////
 
         // CMAC_A
-        auto cmac_a_csb_addr = Extract(Concat(m.input("cmac_a_csb_addr"), BvConst(0,2)), 11, 0);
+        auto cmac_a_csb_addr = Extract(m.input("cmac_a_csb_addr"), 11, 0);
         auto cmac_a_csb_valid = (m.state("cmac_a_csb_rdy") == BvConst(1,1)) & (m.input("cmac_a_csb_vld") == BvConst(1,1));
         auto cmac_a_csb_write = m.input("cmac_a_csb_write") == BvConst(1,1);
         auto cmac_a_group0_unset = m.state(GetVarName("group0_", NVDLA_CMAC_A_D_OP_ENABLE)) == BvConst(0,1);
@@ -43,18 +49,22 @@ namespace ilang {
             auto instr = m.NewInstr("cmac_a_set_producer");
             instr.SetDecode(cmac_a_csb_addr == 0x004 & cmac_a_csb_valid & cmac_a_csb_write);
             instr.SetUpdate(cmac_a_producer, Extract(m.input("cmac_a_csb_data"), 0, 0));
+            instr.SetUpdate(m.state("partial_sum_1"), BvConst(7,16));
         }
 
         { // CMAC_A Set Start Group 0 (addr:008)
             auto instr = m.NewInstr("cmac_a_set_start_group0");
             instr.SetDecode(cmac_a_csb_addr == 0x008 & cmac_a_csb_valid & cmac_a_csb_write & cmac_a_producer == BvConst(0,1) & cmac_a_group0_unset);
             instr.SetUpdate(m.state(GetVarName("group0_", NVDLA_CMAC_A_D_OP_ENABLE)), Extract(m.input("cmac_a_csb_data"), 0, 0));
+            instr.SetUpdate(m.state("partial_sum_2"), BvConst(2,16));
+    
         }      
         
         { // CMAC_A Set Config Group 0 (addr:00c)
             auto instr = m.NewInstr("cmac_a_set_config_group0");
             instr.SetDecode(cmac_a_csb_addr == 0x00c & cmac_a_csb_valid & cmac_a_csb_write & cmac_a_producer == BvConst(0,1) & cmac_a_group0_unset);
             instr.SetUpdate(m.state(GetVarName("group0_", NVDLA_CMAC_A_D_MISC_CFG)), Extract(m.input("cmac_a_csb_data"), 0, 0));
+            instr.SetUpdate(m.state("partial_sum_15"), BvConst(15,16));
         }
 
         { // Start from IDLE
@@ -65,6 +75,8 @@ namespace ilang {
 
             instr.SetDecode(cmac_a_state == IDLE & group0_ok);
             instr.SetUpdate(cmac_a_state, BUSY);
+            instr.SetUpdate(m.state("partial_sum_15"), BvConst(15,16));
+
             instr.SetUpdate(m.state("step_num"), BvConst(1, 6));
         }
 
@@ -81,7 +93,9 @@ namespace ilang {
             // instr.SetDecode(cmac_a_state == DONE & m.input("done") & cmac_a_consumer == BvConst(0,1));
             // instr.SetUpdate(cmac_a_consumer, BvConst(1,1));
 
+            // reset done_with_computation
             instr.SetUpdate(cmac_a_state, IDLE);
+            instr.SetUpdate(done_with_computation, BoolConst(false));
             instr.SetUpdate(m.state(GetVarName("group0_", NVDLA_CMAC_A_D_OP_ENABLE)), BvConst(0,1));
         }
 
@@ -126,9 +140,9 @@ namespace ilang {
 
             // update counter
             auto step_num = m.state("step_num");
-            done_with_computation = step_num < (m.input("csc_data_int16").bit_width() / NVDLA_CMAC_WT_BLOCK_SIZE_INT16) + 1;
-            instr.SetUpdate(m.state("step_num"), Ite(done_with_computation, step_num + 1, BvConst(0, 6)));
-
+            done_with_computation = step_num == (m.input("csc_data_int16").bit_width() / NVDLA_CMAC_WT_BLOCK_SIZE_INT16) + 1;
+            instr.SetUpdate(m.state("done_with_computation"), done_with_computation);
+            instr.SetUpdate(m.state("step_num"), Ite(done_with_computation, BvConst(0, 6), step_num + 1));
             instr.SetUpdate(m.state("cmac_a_state"), PEND);
         }
 

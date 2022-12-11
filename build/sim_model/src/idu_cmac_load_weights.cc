@@ -5,8 +5,8 @@ bool local_var_2 = (cmac_cmac_a_state == local_var_1);
 sc_biguint<6> local_var_4 = 1;
 bool local_var_5 = (cmac_step_num == local_var_4);
 bool local_var_6 = (local_var_2 & local_var_5);
-auto& univ_var_8 = local_var_6;
-return univ_var_8;
+auto& univ_var_7 = local_var_6;
+return univ_var_7;
 }
 void cmac::update_cmac_cmac_load_weights() {
 auto local_var_1 = cmac_csc_weights_int16.range(1023, 0);

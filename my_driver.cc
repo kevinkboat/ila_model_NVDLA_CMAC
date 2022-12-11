@@ -31,8 +31,6 @@ SC_MODULE(Source) {
   
   sc_out< sc_biguint<1> > input_done;
 
- 
-
   SC_CTOR(Source) {
     SC_THREAD(source_input);
     sensitive << clk.pos();
@@ -40,7 +38,7 @@ SC_MODULE(Source) {
 
   void source_input() {
     // reset the port
-    cmac_cmac_a_csb_addr = 0;
+    cmac_cmac_a_csb_addr = "0x004";
     cmac_cmac_a_csb_data = 0;
     cmac_cmac_a_csb_write = 0;    
     cmac_cmac_a_csb_vld = 0;
@@ -67,10 +65,12 @@ SC_MODULE(Source) {
     // }
 
     cmac_cmac_a_csb_addr = std::stoi((cmd_seq["program fragment"][i]["cmac_cmac_a_csb_addr"].get<std::string>()).c_str(), nullptr, 16);
+    
     cmac_cmac_a_csb_data = cmd_seq["program fragment"][i]["cmac_cmac_a_csb_data"].get<int>();
     cmac_cmac_a_csb_write = cmd_seq["program fragment"][i]["cmac_cmac_a_csb_write"].get<int>();    
     cmac_cmac_a_csb_vld = cmd_seq["program fragment"][i]["cmac_cmac_a_csb_vld"].get<int>();
-    cmac_csc_weights_int16 = cmd_seq["program fragment"][i]["cmac_csc_weights_int16"].get<int>();
+    // cmac_csc_weights_int16 = cmd_seq["program fragment"][i]["cmac_csc_weights_int16"].get<int>();
+    cmac_csc_weights_int16 = std::stoi((cmd_seq["program fragment"][i]["cmac_csc_weights_int16"].get<std::string>()).c_str(), nullptr, 16);
     cmac_csc_data_int16 = cmd_seq["program fragment"][i]["cmac_csc_data_int16"].get<int>();
     cmac_status = cmd_seq["program fragment"][i]["cmac_status"].get<int>();
     cmac_output_ack = cmd_seq["program fragment"][i]["cmac_output_ack"].get<int>();
@@ -81,6 +81,8 @@ SC_MODULE(Source) {
     }
 
     input_done = 1;
+    std::cout << "read_file" << std::flush;
+
   }
 
 };
@@ -125,14 +127,26 @@ SC_MODULE(testbench) {
     src.cmac_done(cmac_done_signal);
 
     src.input_done(input_done);
-    
+
+    // Link with the sdp.h SystemC model
+
+    cmac_inst.cmac_cmac_a_csb_addr_in(cmac_cmac_a_csb_addr_signal);
+    cmac_inst.cmac_cmac_a_csb_data_in(cmac_cmac_a_csb_data_signal);
+    cmac_inst.cmac_cmac_a_csb_write_in(cmac_cmac_a_csb_write_signal);    
+    cmac_inst.cmac_cmac_a_csb_vld_in(cmac_cmac_a_csb_vld_signal);
+    cmac_inst.cmac_csc_weights_int16_in(cmac_csc_weights_int16_signal);
+    cmac_inst.cmac_csc_data_int16_in(cmac_csc_data_int16_signal);
+    cmac_inst.cmac_status_in(cmac_status_signal);
+    cmac_inst.cmac_output_ack_in(cmac_output_ack_signal);
+    cmac_inst.cmac_done_in(cmac_done_signal);
+
     SC_THREAD(run);
   }
 
   // Run the SystemC simuation and log outputs
   void run() {
-    cmac_inst.instr_log.open("./sim_info/instr_log_conv.txt", ofstream::out | ofstream::trunc);
-    cmac_inst.instr_update_log.open("./sim_info/instr_update_log_conv.txt", ios::out | ios::trunc);
+    cmac_inst.instr_log.open("instr_log_conv.txt", ofstream::out | ofstream::trunc);
+    cmac_inst.instr_update_log.open("instr_update_log_conv.txt", ios::out | ios::trunc);
 
     std::cout << "start running" << std::endl;
     std::cout << "*********** simulation start ***********" << std::endl;
@@ -148,6 +162,16 @@ SC_MODULE(testbench) {
     std::ofstream fout;
     fout.open(file_out, ios::out | ios::trunc);
  
+    fout << "    addr => " << std::hex << "0x" << cmac_inst.cmac_cmac_a_csb_addr << std::endl; 
+    fout << "    step_num => " << std::dec << cmac_inst.cmac_step_num << std::endl; 
+    fout << "    cmac_cmac_a_state => " << std::dec << cmac_inst.cmac_cmac_a_state << std::endl; 
+    fout << "    done_with_computation => " << std::boolalpha << cmac_inst.cmac_done_with_computation << std::endl; 
+    fout << "    cmac_cmac_partial_sum_rdy => " << std::boolalpha << cmac_inst.cmac_cmac_partial_sum_rdy << std::endl; 
+    fout << std::endl; 
+
+    fout << "    cmac_csc_data_int16 => " << std::hex << "0x" << cmac_inst.cmac_csc_data_int16 << std::endl; 
+    fout << std::endl; 
+
     fout << "    cmac_partial_sum_0 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_0 << std::endl; 
     fout << "    cmac_partial_sum_1 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_1 << std::endl; 
     fout << "    cmac_partial_sum_2 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_2 << std::endl; 
@@ -157,7 +181,6 @@ SC_MODULE(testbench) {
     fout << "    cmac_partial_sum_6 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_6 << std::endl; 
     fout << "    cmac_partial_sum_7 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_7 << std::endl; 
     fout << "    cmac_partial_sum_8 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_8 << std::endl; 
-
     fout << "    cmac_partial_sum_9 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_9 << std::endl; 
     fout << "    cmac_partial_sum_10 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_10 << std::endl; 
     fout << "    cmac_partial_sum_11 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_11 << std::endl; 
@@ -165,6 +188,25 @@ SC_MODULE(testbench) {
     fout << "    cmac_partial_sum_13 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_13 << std::endl; 
     fout << "    cmac_partial_sum_14 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_14 << std::endl; 
     fout << "    cmac_partial_sum_15 => " << std::hex << "0x" << cmac_inst.cmac_partial_sum_15 << std::endl; 
+    fout << std::endl; 
+
+    fout << "    cmac_cmac_weight_0 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_0 << std::endl; 
+    fout << "    cmac_cmac_weight_1 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_1 << std::endl; 
+    fout << "    cmac_cmac_weight_2 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_2 << std::endl; 
+    fout << "    cmac_cmac_weight_3 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_3 << std::endl; 
+    fout << "    cmac_cmac_weight_4 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_4 << std::endl; 
+    fout << "    cmac_cmac_weight_5 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_5 << std::endl; 
+    fout << "    cmac_cmac_weight_6 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_6 << std::endl; 
+    fout << "    cmac_cmac_weight_7 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_7 << std::endl; 
+    fout << "    cmac_cmac_weight_8 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_8 << std::endl; 
+    fout << "    cmac_cmac_weight_9 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_9 << std::endl; 
+    fout << "    cmac_cmac_weight_10 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_10 << std::endl; 
+    fout << "    cmac_cmac_weight_11 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_11 << std::endl; 
+    fout << "    cmac_cmac_weight_12 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_12 << std::endl; 
+    fout << "    cmac_cmac_weight_13 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_13 << std::endl; 
+    fout << "    cmac_cmac_weight_14 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_14 << std::endl; 
+    fout << "    cmac_cmac_weight_15 => " << std::hex << "0x" << cmac_inst.cmac_cmac_weight_15 << std::endl;
+    
 
     fout.close();
     std::cout << "outputs have been stored at " << file_out << std::endl;
@@ -222,3 +264,4 @@ int sc_main(int argc, char *argv[]) {
   return 0;
 
 }
+

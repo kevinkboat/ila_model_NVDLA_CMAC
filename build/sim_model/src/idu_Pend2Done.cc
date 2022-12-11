@@ -5,8 +5,8 @@ bool local_var_2 = (cmac_cmac_a_state == local_var_1);
 sc_biguint<1> local_var_4 = 1;
 bool local_var_5 = (cmac_output_ack == local_var_4);
 bool local_var_6 = (local_var_2 & local_var_5);
-auto& univ_var_6 = local_var_6;
-return univ_var_6;
+auto& univ_var_5 = local_var_6;
+return univ_var_5;
 }
 void cmac::update_cmac_Pend2Done() {
 sc_biguint<2> local_var_1 = 3;

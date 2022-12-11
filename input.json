@@ -1,0 +1,88 @@
+{
+    "program fragment": [
+      {
+        "instr No.": 0,
+        "cmac_cmac_a_csb_addr": "0x004",
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 1,    
+        "cmac_cmac_a_csb_vld": 1,
+        "cmac_csc_weights_int16": "0x0",
+        "cmac_csc_data_int16": 0,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 0
+      },
+      {
+        "instr No.": 1,
+        "cmac_cmac_a_csb_addr": "0x008",
+        "cmac_cmac_a_csb_data": 1,
+        "cmac_cmac_a_csb_write": 1,    
+        "cmac_cmac_a_csb_vld": 1,
+        "cmac_csc_weights_int16": "0x0200",
+        "cmac_csc_data_int16": 24,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 0
+      },
+      {
+        "instr No.": 2,
+        "cmac_cmac_a_csb_addr": "0x000",
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 0,    
+        "cmac_cmac_a_csb_vld": 0,
+        "cmac_csc_weights_int16": "0x0",
+        "cmac_csc_data_int16": 0,
+        "cmac_status": 0,
+        "cmac_output_ack": 1,
+        "cmac_done": 0
+      },
+      {
+        "instr No.": 3,
+        "cmac_cmac_a_csb_addr": "0x000",
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 0,    
+        "cmac_cmac_a_csb_vld": 0,
+        "cmac_csc_weights_int16": "0x0",
+        "cmac_csc_data_int16": 0,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 1
+      },
+      {
+        "instr No.": 4,
+        "cmac_cmac_a_csb_addr": "0x004",
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 1,    
+        "cmac_cmac_a_csb_vld": 1,
+        "cmac_csc_weights_int16": "0x0",
+        "cmac_csc_data_int16": 0,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 0
+      },
+      {
+        "instr No.": 5,
+        "cmac_cmac_a_csb_addr": "0x008",
+        "cmac_cmac_a_csb_data": 1,
+        "cmac_cmac_a_csb_write": 1,    
+        "cmac_cmac_a_csb_vld": 1,
+        "cmac_csc_weights_int16": "0x05d0005",
+        "cmac_csc_data_int16": 1507337,
+        "cmac_status": 0,
+        "cmac_output_ack": 0,
+        "cmac_done": 0
+      },
+      {
+        "instr No.": 6,
+        "cmac_cmac_a_csb_addr": "0x000",
+        "cmac_cmac_a_csb_data": 0,
+        "cmac_cmac_a_csb_write": 0,    
+        "cmac_cmac_a_csb_vld": 0,
+        "cmac_csc_weights_int16": "0x0",
+        "cmac_csc_data_int16": 1507337,
+        "cmac_status": 0,
+        "cmac_output_ack": 1,
+        "cmac_done": 0
+      }
+    ]
+}
